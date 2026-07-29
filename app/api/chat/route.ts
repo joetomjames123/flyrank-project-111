@@ -8,7 +8,7 @@ const MAX_MESSAGES_STORE = 200;
 let messageCount = 0;
 let windowStart = Date.now();
 
-function checkRateLimit(ip: string): boolean {
+function checkRateLimit(): boolean {
   const now = Date.now();
   if (now - windowStart > 60000) {
     messageCount = 0;
@@ -47,8 +47,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const ip = request.headers.get('x-forwarded-for') ?? 'unknown';
-    if (!checkRateLimit(ip)) {
+    if (!checkRateLimit()) {
       return NextResponse.json(
         { error: 'Too many requests. Please wait a moment before trying again.' },
         { status: 429 }

@@ -4,11 +4,10 @@ import type { NextRequest } from 'next/server';
 const RATE_LIMIT_WINDOW_MS = 60 * 1000;
 const RATE_LIMIT_MAX_REQUESTS = 20;
 
-const IP_QUEUE_KEY = 'rate_limit';
 const ipStore = new Map<string, { count: number; resetAt: number }>();
 
 export function middleware(request: NextRequest) {
-  const ip = request.ip ?? request.headers.get('x-forwarded-for') ?? 'unknown';
+  const ip = request.headers.get('x-forwarded-for') ?? 'unknown';
   const now = Date.now();
 
   const entry = ipStore.get(ip);
